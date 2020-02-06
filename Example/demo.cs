@@ -7,19 +7,19 @@ using System.Collections.Generic;
 
 static class Demo {
 	class Box10x : View {
-		public Box10x (int x, int y) : base (new Rect (x, y, 10, 10))
+		public Box10x(int x, int y) : base(new Rect(x, y, 10, 10))
 		{
 		}
 
-		public override void Redraw (Rect region)
+		public override void Redraw(Rect region)
 		{
-			Driver.SetAttribute (ColorScheme.Focus);
+			Driver.SetAttribute(ColorScheme.Focus);
 
 			for (int y = 0; y < 10; y++) {
-				Move (0, y);
+				Move(0, y);
 				for (int x = 0; x < 10; x++) {
 
-					Driver.AddRune ((Rune)('0' + (x + y) % 10));
+					Driver.AddRune((Rune)('0' + (x + y) % 10));
 				}
 			}
 
@@ -27,17 +27,17 @@ static class Demo {
 	}
 
 	class Filler : View {
-		public Filler (Rect rect) : base (rect)
+		public Filler(Rect rect) : base(rect)
 		{
 		}
 
-		public override void Redraw (Rect region)
+		public override void Redraw(Rect region)
 		{
-			Driver.SetAttribute (ColorScheme.Focus);
+			Driver.SetAttribute(ColorScheme.Focus);
 			var f = Frame;
 
 			for (int y = 0; y < f.Width; y++) {
-				Move (0, y);
+				Move(0, y);
 				for (int x = 0; x < f.Height; x++) {
 					Rune r;
 					switch (x % 3) {
@@ -51,45 +51,45 @@ static class Demo {
 						r = 'O';
 						break;
 					}
-					Driver.AddRune (r);
+					Driver.AddRune(r);
 				}
 			}
 		}
 	}
 
 
-	static void ShowTextAlignments (View container)
+	static void ShowTextAlignments(View container)
 	{
-		container.Add (
-			new Label (new Rect (0, 0, 40, 3), "1-Hello world, how are you doing today") { TextAlignment = TextAlignment.Left },
-			new Label (new Rect (0, 4, 40, 3), "2-Hello world, how are you doing today") { TextAlignment = TextAlignment.Right },
-			new Label (new Rect (0, 8, 40, 3), "3-Hello world, how are you doing today") { TextAlignment = TextAlignment.Centered },
-			new Label (new Rect (0, 12, 40, 3), "4-Hello world, how are you doing today") { TextAlignment = TextAlignment.Justified });
+		container.Add(
+			new Label(new Rect(0, 0, 40, 3), "1-Hello world, how are you doing today") { TextAlignment = TextAlignment.Left },
+			new Label(new Rect(0, 4, 40, 3), "2-Hello world, how are you doing today") { TextAlignment = TextAlignment.Right },
+			new Label(new Rect(0, 8, 40, 3), "3-Hello world, how are you doing today") { TextAlignment = TextAlignment.Centered },
+			new Label(new Rect(0, 12, 40, 3), "4-Hello world, how are you doing today") { TextAlignment = TextAlignment.Justified });
 	}
 
-	static void ShowEntries (View container)
+	static void ShowEntries(View container)
 	{
-		var scrollView = new ScrollView (new Rect (50, 10, 20, 8)) {
-			ContentSize = new Size (100, 100),
-			ContentOffset = new Point (-1, -1),
+		var scrollView = new ScrollView(new Rect(50, 10, 20, 8)) {
+			ContentSize = new Size(100, 100),
+			ContentOffset = new Point(-1, -1),
 			ShowVerticalScrollIndicator = true,
 			ShowHorizontalScrollIndicator = true
 		};
 
-		scrollView.Add (new Box10x (0, 0));
+		scrollView.Add(new Box10x(0, 0));
 		//scrollView.Add (new Filler (new Rect (0, 0, 40, 40)));
 
 		// This is just to debug the visuals of the scrollview when small
-		var scrollView2 = new ScrollView (new Rect (72, 10, 3, 3)) {
-			ContentSize = new Size (100, 100),
+		var scrollView2 = new ScrollView(new Rect(72, 10, 3, 3)) {
+			ContentSize = new Size(100, 100),
 			ShowVerticalScrollIndicator = true,
 			ShowHorizontalScrollIndicator = true
 		};
-		scrollView2.Add (new Box10x (0, 0));
-		var progress = new ProgressBar (new Rect (68, 1, 10, 1));
-		bool timer (MainLoop caller)
+		scrollView2.Add(new Box10x(0, 0));
+		var progress = new ProgressBar(new Rect(68, 1, 10, 1));
+		bool timer(MainLoop caller)
 		{
-			progress.Pulse ();
+			progress.Pulse();
 			return true;
 		}
 
@@ -99,35 +99,35 @@ static class Demo {
 		// A little convoluted, this is because I am using this to test the
 		// layout based on referencing elements of another view:
 
-		var login = new Label ("Login: ") { X = 3, Y = 6 };
-		var password = new Label ("Password: ") {
-			X = Pos.Left (login),
-			Y = Pos.Bottom (login) + 1
+		var login = new Label("Login: ") { X = 3, Y = 6 };
+		var password = new Label("Password: ") {
+			X = Pos.Left(login),
+			Y = Pos.Bottom(login) + 1
 		};
-		var loginText = new TextField ("") {
-			X = Pos.Right (password),
-			Y = Pos.Top (login),
+		var loginText = new TextField("") {
+			X = Pos.Right(password),
+			Y = Pos.Top(login),
 			Width = 40
 		};
 
-		var passText = new TextField ("") {
+		var passText = new TextField("") {
 			Secret = true,
-			X = Pos.Left (loginText),
-			Y = Pos.Top (password),
-			Width = Dim.Width (loginText)
+			X = Pos.Left(loginText),
+			Y = Pos.Top(password),
+			Width = Dim.Width(loginText)
 		};
 
 		// Add some content
-		container.Add (
+		container.Add(
 			login,
 			loginText,
 			password,
 			passText,
-			new FrameView (new Rect (3, 10, 25, 6), "Options"){
+			new FrameView(new Rect(3, 10, 25, 6), "Options"){
 				new CheckBox (1, 0, "Remember me"),
 				new RadioGroup (1, 2, new [] { "_Personal", "_Company" }),
 			},
-			new ListView (new Rect (60, 6, 16, 4), new string [] {
+			new ListView(new Rect(60, 6, 16, 4), new string[] {
 				"First row",
 				"<>",
 				"This is a very long row that should overflow what is shown",
@@ -138,12 +138,12 @@ static class Demo {
 			}),
 			scrollView,
 			//scrollView2,
-			new Button (3, 19, "Ok"),
-			new Button (10, 19, "Cancel"),
-			new TimeField (3, 20, DateTime.Now),
-			new TimeField (23, 20, DateTime.Now, true),
+			new Button(3, 19, "Ok"),
+			new Button(10, 19, "Cancel"),
+			new TimeField(3, 20, DateTime.Now),
+			new TimeField(23, 20, DateTime.Now, true),
 			progress,
-			new Label (3, 22, "Press F9 (on Unix, ESC+9 is an alias) to activate the menubar")
+			new Label(3, 22, "Press F9 (on Unix, ESC+9 is an alias) to activate the menubar")
 
 		);
 
@@ -151,20 +151,21 @@ static class Demo {
 
 	public static Label ml2;
 
-	static void NewFile ()
+	static void NewFile()
 	{
-		var d = new Dialog (
+		var d = new Dialog(
 			"New File", 50, 20,
-			new Button ("Ok", is_default: true) { Clicked = () => { Application.RequestStop (); } },
-			new Button ("Cancel") { Clicked = () => { Application.RequestStop (); } });
-		ml2 = new Label (1, 1, "Mouse Debug Line");
-		d.Add (ml2);
-		Application.Run (d);
+			new Button("Ok", is_default: true) { Clicked = () => { Application.RequestStop(); } },
+			new Button("Cancel") { Clicked = () => { Application.RequestStop(); } });
+		ml2 = new Label(1, 1, "Mouse Debug Line");
+		d.Add(ml2);
+		Application.Run(d);
 	}
 
 	// 
 	// Creates a nested editor
-	static void Editor(Toplevel top) {
+	static void Editor(Toplevel top)
+	{
 		var tframe = top.Frame;
 		var ntop = new Toplevel(tframe);
 		var menu = new MenuBar(new MenuBarItem[] {
@@ -195,126 +196,128 @@ static class Demo {
 		ntop.Add(win);
 
 		var text = new TextView(new Rect(0, 0, tframe.Width - 2, tframe.Height - 3));
-		
-		if (fname != null)
-			text.Text = System.IO.File.ReadAllText (fname);
-		win.Add (text);
 
-		Application.Run (ntop);
+		if (fname != null)
+			text.Text = System.IO.File.ReadAllText(fname);
+		win.Add(text);
+
+		Application.Run(ntop);
 	}
 
-	static bool Quit ()
+	static bool Quit()
 	{
-		var n = MessageBox.Query (50, 7, "Quit Demo", "Are you sure you want to quit this demo?", "Yes", "No");
+		var n = MessageBox.Query(50, 7, "Quit Demo", "Are you sure you want to quit this demo?", "Yes", "No");
 		return n == 0;
 	}
 
-	static void Close ()
+	static void Close()
 	{
-		MessageBox.ErrorQuery (50, 5, "Error", "There is nothing to close", "Ok");
+		MessageBox.ErrorQuery(50, 5, "Error", "There is nothing to close", "Ok");
 	}
 
 	// Watch what happens when I try to introduce a newline after the first open brace
 	// it introduces a new brace instead, and does not indent.  Then watch me fight
 	// the editor as more oddities happen.
 
-	public static void Open ()
+	public static void Open()
 	{
-		var d = new OpenDialog ("Open", "Open a file");
-		Application.Run (d);
+		var d = new OpenDialog("Open", "Open a file");
+		Application.Run(d);
 
-		MessageBox.Query (50, 7, "Selected File", string.Join (", ", d.FilePaths), "ok");
+		MessageBox.Query(50, 7, "Selected File", string.Join(", ", d.FilePaths), "ok");
 	}
 
-	public static void ShowHex (Toplevel top)
+	public static void ShowHex(Toplevel top)
 	{
 		var tframe = top.Frame;
-		var ntop = new Toplevel (tframe);
-		var menu = new MenuBar (new MenuBarItem [] {
+		var ntop = new Toplevel(tframe);
+		var menu = new MenuBar(new MenuBarItem[] {
 			new MenuBarItem ("_File", new MenuItem [] {
 				new MenuItem ("_Close", "", () => {Application.RequestStop ();}),
 			}),
 		});
-		ntop.Add (menu);
+		ntop.Add(menu);
 
-		var win = new Window ("/etc/passwd") {
+		var win = new Window("/etc/passwd") {
 			X = 0,
 			Y = 1,
-			Width = Dim.Fill (),
-			Height = Dim.Fill ()
+			Width = Dim.Fill(),
+			Height = Dim.Fill()
 		};
-		ntop.Add (win);
+		ntop.Add(win);
 
-		var source = System.IO.File.OpenRead ("/etc/passwd");
-		var hex = new HexView (source) {
+		var source = System.IO.File.OpenRead("/etc/passwd");
+		var hex = new HexView(source) {
 			X = 0,
 			Y = 0,
-			Width = Dim.Fill (),
-			Height = Dim.Fill ()
+			Width = Dim.Fill(),
+			Height = Dim.Fill()
 		};
-		win.Add (hex);
-		Application.Run (ntop);
-			
+		win.Add(hex);
+		Application.Run(ntop);
+
 	}
 
 	#region Selection Demo
 
-	static void ListSelectionDemo ()
+	static void ListSelectionDemo()
 	{
-		var d = new Dialog ("Selection Demo", 60, 20,
-			new Button ("Ok", is_default: true) { Clicked = () => { Application.RequestStop (); } },
-			new Button ("Cancel") { Clicked = () => { Application.RequestStop (); } });
+		var d = new Dialog("Selection Demo", 60, 20,
+			new Button("Ok", is_default: true) { Clicked = () => { Application.RequestStop(); } },
+			new Button("Cancel") { Clicked = () => { Application.RequestStop(); } });
 
-		var animals = new List<string> () { "Alpaca", "Llama", "Lion", "Shark", "Goat" };
-		var msg = new Label ("Use space bar or control-t to toggle selection") {
+		var animals = new List<string>() { "Alpaca", "Llama", "Lion", "Shark", "Goat" };
+		var msg = new Label("Use space bar or control-t to toggle selection") {
 			X = 1,
 			Y = 1,
-			Width = Dim.Fill () - 1,
+			Width = Dim.Fill() - 1,
 			Height = 1
 		};
 
-		var list = new ListView (animals) {
+		var list = new ListView(animals) {
 			X = 1,
 			Y = 3,
-			Width = Dim.Fill () - 4,
-			Height = Dim.Fill () - 4,
+			Width = Dim.Fill() - 4,
+			Height = Dim.Fill() - 4,
 			AllowsMarking = true
 		};
-		d.Add (msg, list);
-		Application.Run (d);
+		d.Add(msg, list);
+		Application.Run(d);
 
 		var result = "";
 		for (int i = 0; i < animals.Count; i++) {
-			if (list.Source.IsMarked (i)) {
-				result += animals [i] + " ";
+			if (list.Source.IsMarked(i)) {
+				result += animals[i] + " ";
 			}
 		}
-		MessageBox.Query (60, 10, "Selected Animals", result == "" ? "No animals selected" : result, "Ok");
+		MessageBox.Query(60, 10, "Selected Animals", result == "" ? "No animals selected" : result, "Ok");
 	}
 	#endregion
 
 
 	public static Label ml;
-	static void Main ()
+	public static ProgressBar pb;
+
+	static void Main()
 	{
 		//Application.UseSystemConsole = true;
-		Application.Init ();
-		
+		Application.Init();
+
 		var top = Application.Top;
-		
+
 		var tframe = top.Frame;
 		//Open ();
 #if true
-		var win = new Window ("Hello") {
+		var win = new Window("Hello") {
 			X = 0,
 			Y = 1,
-			Width = Dim.Fill (),
-			Height = Dim.Fill ()
+			Width = Dim.Fill(),
+			Height = Dim.Fill()
 		};
 #else
 		var win = new Window (new Rect (0, 1, tframe.Width, tframe.Height - 1), "Hello");
 #endif
-		var menu = new MenuBar (new MenuBarItem [] {
+		var menu = new MenuBar(new MenuBarItem[] {
 			new MenuBarItem ("_File", new MenuItem [] {
 				new MenuItem ("Text Editor Demo", "", () => { Editor (top); }),
 				new MenuItem ("_New", "Creates new file", NewFile),
@@ -330,25 +333,43 @@ static class Demo {
 			}),
 			 new MenuBarItem ("_List Demos", new MenuItem [] {
 				new MenuItem ("Select Items", "", ListSelectionDemo),
+				new MenuItem ("Start progress bar", "", StartProgressBar)
 			}),
 		});
 
-		ShowEntries (win);
+		ShowEntries(win);
 
 		int count = 0;
-		ml = new Label (new Rect (3, 17, 47, 1), "Mouse: ");
+		ml = new Label(new Rect(3, 17, 47, 1), "Mouse: ");
 		Application.RootMouseEvent += delegate (MouseEvent me) {
 
 			ml.Text = $"Mouse: ({me.X},{me.Y}) - {me.Flags} {count++}";
 		};
-		
-		var test = new Label (3, 18, "Se iniciará el análisis");
-		win.Add (test);
-		win.Add (ml);
-		
+
+		var test = new Label(3, 18, "Se iniciará el análisis");
+		win.Add(test);
+		win.Add(ml);
+
+		pb = new ProgressBar(new Rect(3, 23, 80, 1));
+		pb.Filler = new Rune('#');
+		pb.RemainingFiller = new Rune('.');
+		pb.ShowPercentage = true;
+		pb.Fraction = 0.0F;
+		pb.FinalLabel = " DONE! ";
+		win.Add(pb);
+
 		// ShowTextAlignments (win);
-		top.Add (win);
-		top.Add (menu);
-		Application.Run ();
+		top.Add(win);
+		top.Add(menu);
+		Application.Run();
+	}
+
+	private static void StartProgressBar()
+	{
+		for (double i = 0; i < 1.0; i += 0.1) {
+			pb.Fraction = (float)i;
+			System.Threading.Thread.Sleep(500);
+			Application.Refresh();
+		}
 	}
 }

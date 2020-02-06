@@ -20,10 +20,30 @@ namespace Terminal.Gui {
 		int activityPos, delta;
 
 		/// <summary>
+		/// Gets or sets the rune used to draw the progress bar indicator
+		/// </summary>
+		public Rune Filler { get; set; } = Driver.Stipple;
+
+		/// <summary>
+		/// Gets or sets the rune used to draw the remaining
+		/// </summary>
+		public Rune RemainingFiller { get; set; } = new Rune(' ');
+
+		/// <summary>
+		/// Turn on/off the percentage indicator drawn over the progress bar
+		/// </summary>
+		public bool ShowPercentage { get; set; }
+
+		/// <summary>
+		/// Gets or sets the label shown when percentage is 100% (progress bar full)
+		/// </summary>
+		public string FinalLabel { get; set; } = string.Empty;
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Terminal.Gui.ProgressBar"/> class, starts in percentage mode with an absolute position and size.
 		/// </summary>
 		/// <param name="rect">Rect.</param>
-		public ProgressBar (Rect rect) : base (rect)
+		public ProgressBar(Rect rect) : base(rect)
 		{
 			CanFocus = false;
 			fraction = 0;
@@ -32,7 +52,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Terminal.Gui.ProgressBar"/> class, starts in percentage mode and uses relative layout.
 		/// </summary>
-		public ProgressBar () : base ()
+		public ProgressBar() : base()
 		{
 			CanFocus = false;
 			fraction = 0;
@@ -49,7 +69,7 @@ namespace Terminal.Gui {
 			set {
 				fraction = value;
 				isActivity = false;
-				SetNeedsDisplay ();
+				SetNeedsDisplay();
 			}
 		}
 
@@ -60,7 +80,7 @@ namespace Terminal.Gui {
 		/// If the ProgressBar is is percentage mode, it switches to activity
 		/// mode.   If is in activity mode, the marker is moved.
 		/// </remarks>
-		public void Pulse ()
+		public void Pulse()
 		{
 			if (!isActivity) {
 				isActivity = true;
@@ -77,29 +97,49 @@ namespace Terminal.Gui {
 				}
 			}
 
-			SetNeedsDisplay ();
+			SetNeedsDisplay();
 		}
 
 		public override void Redraw(Rect region)
 		{
-			Driver.SetAttribute (ColorScheme.Normal);
+			Driver.SetAttribute(ColorScheme.Normal);
 
 			int top = Frame.Width;
 			if (isActivity) {
-				Move (0, 0);
+				Move(0, 0);
 				for (int i = 0; i < top; i++)
 					if (i == activityPos)
-						Driver.AddRune (Driver.Stipple);
+						Driver.AddRune(this.Filler);
 					else
-						Driver.AddRune (' ');
+						Driver.AddRune(this.RemainingFiller);
 			} else {
-				Move (0, 0);
+				Move(0, 0);
 				int mid = (int)(fraction * top);
 				int i;
 				for (i = 0; i < mid; i++)
-					Driver.AddRune (Driver.Stipple);
+					Driver.AddRune(this.Filler);
 				for (; i < top; i++)
-					Driver.AddRune (' ');
+					Driver.AddRune(this.RemainingFiller);
+
+
+				if (this.ShowPercentage) {
+					float value = fraction * 100;
+					string output;
+
+					if (value != 100F) {
+						output = $" {value}% ";
+					} else {
+						output = this.FinalLabel;
+					}
+
+					int length = output.Length;
+					int x = Math.Max(0, (int)(((double)mid / 2.0) - (double)length));
+
+					this.Move(x, 0);
+					Driver.AddStr(output);
+				}
+
+				this.SetNeedsDisplay();
 			}
 		}
 	}
